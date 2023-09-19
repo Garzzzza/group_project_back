@@ -1,5 +1,8 @@
 const bcrypt = require("bcrypt");
-const { getUserByEmailModel } = require("../models/usersModel");
+const {
+  getUserByEmailModel,
+  getUserByNicknameModel,
+} = require("../models/usersModel");
 
 function passwordMatch(req, res, next) {
   if (req.body.password !== req.body.rePassword) {
@@ -9,9 +12,13 @@ function passwordMatch(req, res, next) {
 }
 
 async function isNewUser(req, res, next) {
-  const user = await getUserByEmailModel(req.body.email);
-  if (user) {
+  const userByEmail = await getUserByEmailModel(req.body.email);
+  const userByNickname = await getUserByNicknameModel(req.body.nickname);
+  if (userByEmail) {
     return res.status(400).send("User with this email already exists");
+  }
+  if (userByNickname) {
+    return res.status(400).send("User with this nickname already exists");
   }
   next();
 }
