@@ -2,7 +2,9 @@ const bcrypt = require("bcrypt");
 const {
   getUserByEmailModel,
   getUserByNicknameModel,
+  getUserByIdModel,
 } = require("../models/usersModel");
+const jwt = require("jsonwebtoken");
 
 function passwordMatch(req, res, next) {
   if (req.body.password !== req.body.rePassword) {
@@ -68,10 +70,27 @@ async function comparePass(request, response, next) {
   }
 }
 
+function auth(req, res, next) {
+  if (!req.headers.authorization) {
+    return res.status(401).send("Authorization headers required");
+  }
+  const token = req.headers.authorization.replace("Bearer ", "");
+
+  jwt.verify(token, process.env.TOKEN_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(401).send("Invalid token");
+    }
+    req.body._id = decoded.id;
+
+    next();
+  });
+}
+
 module.exports = {
   passwordMatch,
   isNewUser,
   hashPwd,
   isExistingUser,
   comparePass,
+  auth,
 };

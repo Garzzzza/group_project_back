@@ -42,9 +42,20 @@ async function getUserByNicknameModel(nickname) {
   }
 }
 
+async function getUserByIdModel(_id) {
+  try {
+    const user = await User.findOne({ _id: _id });
+
+    return user;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 module.exports = {
   User,
   signUpModel,
   getUserByEmailModel,
   getUserByNicknameModel,
+  getUserByIdModel,
 };

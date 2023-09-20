@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const { signUpModel } = require("../models/usersModel");
+const { signUpModel, getUserByIdModel } = require("../models/usersModel");
 const {
   passwordMatch,
   isNewUser,
   hashPwd,
   isExistingUser,
   comparePass,
+  auth,
 } = require("../middlewares/middlewares");
 require("dotenv").config();
-
 const jwt = require("jsonwebtoken");
 
 router.post("/", isNewUser, passwordMatch, hashPwd, async (req, res) => {
@@ -41,5 +41,15 @@ router.post(
     }
   }
 );
+
+router.get("/loggeduser", auth, async (req, res) => {
+  try {
+    const user = await getUserByIdModel(req.body._id);
+    res.send(user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err.message);
+  }
+});
 
 module.exports = router;
