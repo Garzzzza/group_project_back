@@ -27,9 +27,7 @@ async function getUserByEmailModel(email) {
   try {
     const userByEmail = await User.findOne({ email: email });
 
-    if (userByEmail) {
-      return userByEmail;
-    }
+    return userByEmail;
   } catch (err) {
     console.log(err);
   }
@@ -38,10 +36,7 @@ async function getUserByEmailModel(email) {
 async function getUserByNicknameModel(nickname) {
   try {
     const userByNickname = await User.findOne({ nickname: nickname });
-
-    if (userByNickname) {
-      return userByNickname;
-    }
+    return userByNickname;
   } catch (err) {
     console.log(err);
   }

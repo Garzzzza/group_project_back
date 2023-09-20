@@ -5,7 +5,12 @@ const {
   passwordMatch,
   isNewUser,
   hashPwd,
+  isExistingUser,
+  comparePass,
 } = require("../middlewares/middlewares");
+require("dotenv").config();
+
+const jwt = require("jsonwebtoken");
 
 router.post("/", isNewUser, passwordMatch, hashPwd, async (req, res) => {
   try {
@@ -17,5 +22,24 @@ router.post("/", isNewUser, passwordMatch, hashPwd, async (req, res) => {
     res.status(500).send("Internal server error");
   }
 });
+
+router.post(
+  "/login",
+  isExistingUser,
+  comparePass,
+  async (request, response) => {
+    try {
+      const token = jwt.sign(
+        { id: request.body.user._id },
+        process.env.TOKEN_KEY,
+        { expiresIn: "20h" }
+      );
+      response.send({ token: token });
+    } catch (error) {
+      console.log(error);
+      response.status(500).send(error.message);
+    }
+  }
+);
 
 module.exports = router;

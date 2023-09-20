@@ -35,8 +35,43 @@ function hashPwd(req, res, next) {
   });
 }
 
+async function isExistingUser(req, res, next) {
+  const userByEmail = await getUserByEmailModel(req.body.email);
+  if (userByEmail) {
+    req.body.user = userByEmail;
+    next();
+  } else {
+    res.status(400).send("User with this email does not exist");
+  }
+}
+
+async function comparePass(request, response, next) {
+  try {
+    bcrypt.compare(
+      request.body.password,
+      request.body.user.password,
+      (err, result) => {
+        if (!result) {
+          return response.status(401).send("Incorrect password");
+        }
+        if (err) {
+          return response.status(500).send("Error comparing");
+        }
+        if (result) {
+          next();
+        }
+      }
+    );
+  } catch (err) {
+    console.log(err);
+    response.status(500).send(err.message);
+  }
+}
+
 module.exports = {
   passwordMatch,
   isNewUser,
   hashPwd,
+  isExistingUser,
+  comparePass,
 };
