@@ -20,7 +20,7 @@ const signUpModel = (userData) => {
     email: userData.email,
     password: userData.pass,
   });
-  return user.save();
+  user.save();
 };
 
 async function getUserByEmailModel(email) {
