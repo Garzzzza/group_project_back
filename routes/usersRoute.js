@@ -22,7 +22,6 @@ router.post(
   async (req, res) => {
     try {
       req.body.picture = req.file.path;
-      console.log(req.body);
       await signUpModel(req.body);
       res.status(200).send("User added");
       console.log("User added");

@@ -8,8 +8,9 @@ const {
   getLoggedUserScoresModel,
 } = require("../models/scoresModel");
 
-router.post("/", auth, async (request, response) => {
+router.post("/:game", auth, async (request, response) => {
   try {
+    request.body.game = request.params.game;
     await newScoreModel(request.body);
     response.status(200).send("Score added successfully");
     console.log("Score added successfully");
@@ -19,9 +20,11 @@ router.post("/", auth, async (request, response) => {
   }
 });
 
-router.get("/", auth, async (request, response) => {
+router.get("/:game", auth, async (request, response) => {
   try {
-    const scores = await getAllScoresModel();
+    request.body.game = request.params.game;
+
+    const scores = await getAllScoresModel(request.body);
     response.status(200).send(scores);
     console.log("Scores got successfully");
   } catch (error) {
@@ -30,9 +33,11 @@ router.get("/", auth, async (request, response) => {
   }
 });
 
-router.get("/", auth, async (request, response) => {
+router.get("/user_score/:game", auth, async (request, response) => {
   try {
-    const scores = await getLoggedUserScoresModel(request.body._id);
+    request.body.game = request.params.game;
+
+    const scores = await getLoggedUserScoresModel(request.body);
     response.status(200).send(scores);
     console.log("Scores got successfully");
   } catch (error) {

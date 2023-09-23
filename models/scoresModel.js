@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const scoreSchema = new mongoose.Schema({
+const scoreGameSchema = new mongoose.Schema({
   userId: {
     type: String,
     required: true,
@@ -13,37 +13,59 @@ const scoreSchema = new mongoose.Schema({
     type: Date,
     default: Date.now, // Will set to current date and time by default
   },
-  game: {
-    type: String,
-    required: true,
-  },
 });
 
-const Score = mongoose.model("Score", scoreSchema);
+const scoreKGame = mongoose.model("ScoreKGame", scoreGameSchema, "ScoreKGame");
+const scoreIGame = mongoose.model("ScoreIGame", scoreGameSchema, "ScoreIGame");
 
 const newScoreModel = async (scoreData) => {
-  const score = new Score({
-    userId: scoreData._id,
-    nickname: scoreData.nickname,
-    score: scoreData.score,
-    game: scoreData.game,
-  });
-  await score.save();
-  return score;
-};
-
-const getAllScoresModel = async () => {
   try {
-    const scores = await Score.find();
-    return scores;
+    let gameModel;
+    if (scoreData.game === "kgame") {
+      gameModel = scoreKGame;
+    } else if (scoreData.game === "igame") {
+      gameModel = scoreIGame;
+    }
+
+    const score = new gameModel({
+      userId: scoreData._id,
+      score: scoreData.score,
+      date: Date.now(),
+    });
+
+    await score.save();
+    return score;
   } catch (error) {
     console.error("Error getting all scores:", error);
+    throw error;
   }
 };
 
-const getLoggedUserScoresModel = async (userId) => {
+const getAllScoresModel = async (scoreData) => {
   try {
-    const scores = await Score.find({ userId: userId });
+    let gameModel;
+    if (scoreData.game === "kgame") {
+      gameModel = scoreKGame;
+    } else if (scoreData.game === "igame") {
+      gameModel = scoreIGame;
+    }
+    const scores = await gameModel.find();
+    return scores;
+  } catch (error) {
+    console.error("Error getting all scores:", error);
+    throw error;
+  }
+};
+
+const getLoggedUserScoresModel = async (scoreData) => {
+  try {
+    let gameModel;
+    if (scoreData.game === "kgame") {
+      gameModel = scoreKGame;
+    } else if (scoreData.game === "igame") {
+      gameModel = scoreIGame;
+    }
+    const scores = await gameModel.find({ userId: scoreData._id });
     return scores;
   } catch (error) {
     console.error("Error getting all scores:", error);
@@ -51,7 +73,8 @@ const getLoggedUserScoresModel = async (userId) => {
 };
 
 module.exports = {
-  Score,
+  scoreIGame,
+  scoreKGame,
   newScoreModel,
   getAllScoresModel,
   getLoggedUserScoresModel,
