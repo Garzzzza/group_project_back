@@ -1,3 +1,4 @@
+require("dotenv").config();
 const bcrypt = require("bcrypt");
 const {
   getUserByEmailModel,
@@ -5,6 +6,9 @@ const {
   getUserByIdModel,
 } = require("../models/usersModel");
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 function passwordMatch(req, res, next) {
   if (req.body.password !== req.body.rePassword) {
@@ -26,12 +30,15 @@ async function isNewUser(req, res, next) {
 }
 
 function hashPwd(req, res, next) {
+  console.log("Password Value:", req.body.password);
+  console.log("Password Type:", typeof req.body.password);
   const saltRounds = 5;
   bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
     if (err) {
       res.status(400).send("Error hashing password");
+      console.log(err);
     } else {
-      req.body.pass = hash;
+      req.body.password = hash;
       next();
     }
   });
@@ -86,6 +93,25 @@ function auth(req, res, next) {
   });
 }
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const cloudStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(
+      null,
+      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+    );
+  },
+});
+
+const upload = multer({ storage: cloudStorage });
+
 module.exports = {
   passwordMatch,
   isNewUser,
@@ -93,4 +119,5 @@ module.exports = {
   isExistingUser,
   comparePass,
   auth,
+  upload,
 };

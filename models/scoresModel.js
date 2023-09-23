@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 
 const scoreSchema = new mongoose.Schema({
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // reference to the User model
+    type: String,
     required: true,
   },
   score: {
@@ -14,6 +13,10 @@ const scoreSchema = new mongoose.Schema({
     type: Date,
     default: Date.now, // Will set to current date and time by default
   },
+  game: {
+    type: String,
+    required: true,
+  },
 });
 
 const Score = mongoose.model("Score", scoreSchema);
@@ -23,6 +26,7 @@ const newScoreModel = async (scoreData) => {
     userId: scoreData._id,
     nickname: scoreData.nickname,
     score: scoreData.score,
+    game: scoreData.game,
   });
   await score.save();
   return score;

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 require("dotenv").config();
+const { auth } = require("../middlewares/middlewares");
 const {
   newScoreModel,
   getAllScoresModel,

@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
   lastName: String,
   nickname: String,
   email: String,
+  picture: String,
   password: String,
 });
 
@@ -18,7 +19,8 @@ const signUpModel = (userData) => {
     lastName: userData.lastName,
     nickname: userData.nickname,
     email: userData.email,
-    password: userData.pass,
+    picture: userData.picture,
+    password: userData.password,
   });
   user.save();
 };
