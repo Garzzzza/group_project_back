@@ -14,7 +14,6 @@ const scoreGameSchema = new mongoose.Schema({
     default: Date.now, // Will set to current date and time by default
   },
 });
-
 const scoreKGame = mongoose.model("ScoreKGame", scoreGameSchema, "ScoreKGame");
 const scoreIGame = mongoose.model("ScoreIGame", scoreGameSchema, "ScoreIGame");
 
