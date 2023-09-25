@@ -6,6 +6,7 @@ const {
   newScoreModel,
   getAllScoresModel,
   getLoggedUserScoresModel,
+  getTop5ScoresModel,
 } = require("../models/scoresModel");
 
 router.post("/:game", auth, async (request, response) => {
@@ -38,6 +39,17 @@ router.get("/user_score/:game", auth, async (request, response) => {
     response.status(200).send(scores);
   } catch (error) {
     console.error("Error getting scores:", error);
+    response.status(500).send("Internal server error");
+  }
+});
+
+router.get("/top5/:game", auth, async (request, response) => {
+  try {
+    request.body.game = request.params.game;
+    const scores = await getTop5ScoresModel(request.body);
+    response.status(200).send(scores);
+  } catch (error) {
+    console.error("Error getting top 5 scores:", error);
     response.status(500).send("Internal server error");
   }
 });

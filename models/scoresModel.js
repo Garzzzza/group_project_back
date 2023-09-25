@@ -74,10 +74,31 @@ const getLoggedUserScoresModel = async (scoreData) => {
   }
 };
 
+const getTop5ScoresModel = async (scoreData) => {
+  try {
+    let gameModel;
+    if (scoreData.game === "kgame") {
+      gameModel = scoreKGame;
+    } else if (scoreData.game === "igame") {
+      gameModel = scoreIGame;
+    }
+    const scores = await gameModel
+      .find()
+      .sort({ score: -1 }) // Sort by score in descending order
+      .limit(5) // Limit to the top 5 scores
+      .populate("userId");
+    return scores;
+  } catch (error) {
+    console.error("Error getting top 5 scores:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   scoreIGame,
   scoreKGame,
   newScoreModel,
   getAllScoresModel,
   getLoggedUserScoresModel,
+  getTop5ScoresModel,
 };
