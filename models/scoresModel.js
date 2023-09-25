@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const scoreGameSchema = new mongoose.Schema({
   userId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User", // Added reference to User model
     required: true,
   },
   score: {
@@ -11,7 +12,7 @@ const scoreGameSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
-    default: Date.now, // Will set to current date and time by default
+    default: Date.now,
   },
 });
 const scoreKGame = mongoose.model("ScoreKGame", scoreGameSchema, "ScoreKGame");
@@ -48,7 +49,7 @@ const getAllScoresModel = async (scoreData) => {
     } else if (scoreData.game === "igame") {
       gameModel = scoreIGame;
     }
-    const scores = await gameModel.find();
+    const scores = await gameModel.find().populate("userId");
     return scores;
   } catch (error) {
     console.error("Error getting all scores:", error);
@@ -64,7 +65,9 @@ const getLoggedUserScoresModel = async (scoreData) => {
     } else if (scoreData.game === "igame") {
       gameModel = scoreIGame;
     }
-    const scores = await gameModel.find({ userId: scoreData._id });
+    const scores = await gameModel
+      .find({ userId: scoreData._id })
+      .populate("userId");
     return scores;
   } catch (error) {
     console.error("Error getting all scores:", error);

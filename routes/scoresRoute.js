@@ -34,7 +34,6 @@ router.get("/:game", auth, async (request, response) => {
 router.get("/user_score/:game", auth, async (request, response) => {
   try {
     request.body.game = request.params.game;
-
     const scores = await getLoggedUserScoresModel(request.body);
     response.status(200).send(scores);
   } catch (error) {
