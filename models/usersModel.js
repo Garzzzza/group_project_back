@@ -9,10 +9,8 @@ const userSchema = new mongoose.Schema({
   password: String,
 });
 
-// Creating a Model based on the schema
 const User = mongoose.model("User", userSchema);
 
-// Function to create a user
 const signUpModel = (userData) => {
   const user = new User({
     firstName: userData.firstName,

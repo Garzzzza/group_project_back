@@ -21,7 +21,7 @@ const getSolutionsModel = async () => {
     const solutions = await solution.find();
     return solutions;
   } catch (error) {
-    console.error("Error getting all scores:", error);
+    console.error("Error getting solutions:", error);
     throw error;
   }
 };

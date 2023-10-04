@@ -26,17 +26,15 @@ const newScoreModel = async (scoreData) => {
     } else if (scoreData.game === "igame") {
       gameModel = scoreIGame;
     }
-
     const score = new gameModel({
       userId: scoreData._id,
       score: scoreData.score,
       date: Date.now(),
     });
-
     await score.save();
     return score;
   } catch (error) {
-    console.error("Error getting all scores:", error);
+    console.error("Error posting score:", error);
     throw error;
   }
 };
@@ -70,7 +68,7 @@ const getLoggedUserScoresModel = async (scoreData) => {
       .populate("userId");
     return scores;
   } catch (error) {
-    console.error("Error getting all scores:", error);
+    console.error("Error getting logged user:", error);
   }
 };
 
@@ -85,11 +83,11 @@ const getTop5ScoresModel = async (scoreData) => {
     const scores = await gameModel
       .find()
       .sort({ score: -1 }) // Sort by score in descending order
-      .limit(5) // Limit to the top 5 scores
+      .limit(5)
       .populate("userId");
     return scores;
   } catch (error) {
-    console.error("Error getting top 5 scores:", error);
+    console.error("Error getting top 5 scores", error);
     throw error;
   }
 };

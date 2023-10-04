@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt");
 const {
   getUserByEmailModel,
   getUserByNicknameModel,
-  getUserByIdModel,
 } = require("../models/usersModel");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
