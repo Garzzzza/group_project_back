@@ -9,10 +9,15 @@ const usersRouter = require("./routes/usersRoute");
 const scoresRouter = require("./routes/scoresRoute");
 const kGameRouter = require("./routes/kGameRoute");
 
-app.use(cors());
-app.use(express.json());
+app.use(
+  cors({
+    origin: "https://game-app-client-seven.vercel.app/", // Specify your frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers if needed
+  })
+);
 
-connectDB(); // Connect to MongoDB
+connectDB();
 
 app.use("/users", usersRouter);
 app.use("/scores", scoresRouter);

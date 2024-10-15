@@ -20,7 +20,7 @@
     "mongoose": "*",
     "multer": "*",
     "multer-storage-cloudinary": "*",
-    "nodemon": "*",
+    "nodemon": "^3.1.7",
     "vercel": "*"
   }
 }
