@@ -10,6 +10,7 @@ const scoresRouter = require("./routes/scoresRoute");
 const kGameRouter = require("./routes/kGameRoute");
 
 app.use(cors());
+app.use(express.json());
 
 connectDB();
 
